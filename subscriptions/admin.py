@@ -12,3 +12,9 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_filter = ('status', 'plan')
     search_fields = ('user__username',)
     autocomplete_fields = ('user', 'plan')
+
+@admin.register(ExchangeRateLog)
+class ExchangeRateLogAdmin(admin.ModelAdmin):
+    list_display = ('base_currency', 'target_currency', 'rate', 'fetched_at')
+    list_filter = ('base_currency', 'target_currency')
+    ordering = ('-fetched_at',)
