@@ -26,7 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS',default='127.0.0.1,localhost').split(',')
 
 
 # Application definition
@@ -38,6 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third-party apps
+    'rest_framework',
+    'rest_framework_simplejwt',
+
+    # Local apps
+    'subscriptions',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +81,12 @@ WSGI_APPLICATION = 'subscriptionManagement.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.mysql'),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER', default=''),
+        'PASSWORD':config('DB_PASSWORD'),
+        'HOST':config('DB_HOST'),
+        'PORT':config('DB_PORT')
     }
 }
 
