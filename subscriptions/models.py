@@ -12,3 +12,24 @@ class Plan(models.Model):
 
     def __str__(self):
         return f"{self.name} - ${self.price} for {self.duration_days} days"
+    
+class Status(models.TextChoices):
+    ACTIVE = 'active', 'Active'
+    CANCELLED = 'cancelled', 'Cancelled'
+    EXPIRED = 'expired', 'Expired'
+
+class Subscription(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions')
+    plan = models.ForeignKey(Plan, on_delete=models.PROTECT)
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField()
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.ACTIVE)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.end_date = timezone.now() + timedelta(days=self.plan.duration_days)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user.username}'s subscription to {self.plan.name}"
