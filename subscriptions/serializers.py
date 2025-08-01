@@ -20,3 +20,10 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         model = Subscription
         fields = ('id', 'user', 'plan', 'start_date', 'end_date', 'status')
 
+class SubscribeSerializer(serializers.ModelSerializer):
+    plan_id = serializers.IntegerField()
+
+    def validate_plan_id(self, value):
+        if not Plan.objects.filter(pk=value).exists():
+            raise serializers.ValidationError('Plan with this ID does not exist.')
+        return value
