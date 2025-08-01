@@ -27,3 +27,11 @@ class SubscribeSerializer(serializers.ModelSerializer):
         if not Plan.objects.filter(pk=value).exists():
             raise serializers.ValidationError('Plan with this ID does not exist.')
         return value
+
+class CancelSubscriptionSerializer(serializers.Serializer):
+    subscription_id = serializers.IntegerField()
+
+    def validate_subscription_id(self, value):
+        if not Subscription.objects.filter(pk=value).exists():
+            raise serializers.ValidationError('Subscription with this ID does not exit.')
+        return value
